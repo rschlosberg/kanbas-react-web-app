@@ -24,7 +24,7 @@ export default function Modules() {
                 <li className="wd-content-item">Full Stack Developer - Chapter 1</li>
                 <li className="wd-content-item">Full Stack Developer - Chapter 2</li>
               </ul>
-              <span className="wd-title">Slides</span>
+              <span className="wd-title">SLIDES</span>
               <ul className="wd-content">
                 <li className="wd-content-item">Introduction to Web Development</li>
                 <li className="wd-content-item">Creating an HTTP server with Node.js</li>
