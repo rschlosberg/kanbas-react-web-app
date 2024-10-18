@@ -1,9 +1,20 @@
+import { useParams } from "react-router";
+import * as db from "../../Database";
+const assignments = db.assignments
+
+
 export default function AssignmentEditor() {
+  const {cid, aid } = useParams();
+  const assignment = assignments.find(assignment => assignment._id === aid)
+
+   //Display the title of the selected assignment as well as the 
+   // description, points, due date, and available date. 
+
   return (
     <div id="wd-assignments-editor" className="container mt-4">
       <div className="mb-3">
         <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-        <input id="wd-name" value="A1 - ENV + HTML" className="form-control" />
+        <input id="wd-name" value={assignment?.title } className="form-control" />
       </div>
 
       <div className="mb-3">
@@ -12,8 +23,7 @@ export default function AssignmentEditor() {
         <p>
           The assignment is <span className="text-danger">available online.</span> 
         </p>
-        <p>Submit a link to the landing page of your Web application
-          running on Netlify.
+        <p>{assignment?.description}
         </p>
         <p>The landing page should include the following:</p>
         <ul>
@@ -29,7 +39,7 @@ export default function AssignmentEditor() {
       <div className="mb-3 row">
         <label htmlFor="wd-points" className="col-sm-2 col-form-label text-end">Points</label>
         <div className="col-sm-10">
-          <input id="wd-points" value={100} className="form-control" />
+          <input id="wd-points" value={assignment?.points} className="form-control" />
         </div>
       </div>
 
@@ -96,18 +106,18 @@ export default function AssignmentEditor() {
       <div className="mb-3 row">
         <label htmlFor="wd-due-date" className="col-sm-2 col-form-label text-end">Due</label>
         <div className="col-sm-10">
-          <input type="date" id="wd-due-date" value="2024-05-13" className="form-control" />
+          <input type="date" id="wd-due-date" value={assignment?.due} className="form-control" />
         </div>
       </div>
 
       <div className="mb-3 row">
         <label htmlFor="wd-available-from" className="col-sm-2 col-form-label text-end">Available from</label>
         <div className="col-sm-4">
-          <input type="date" id="wd-available-from" value="2024-05-06" className="form-control" />
+          <input type="date" id="wd-available-from" value={assignment?.available} className="form-control" />
         </div>
         <label htmlFor="wd-available-until" className="col-sm-2 col-form-label text-end">Until</label>
         <div className="col-sm-4">
-          <input type="date" id="wd-available-until" value="2024-05-20" className="form-control" />
+          <input type="date" id="wd-available-until" value={assignment?.due} className="form-control" />
         </div>
       </div>
       <hr/>
