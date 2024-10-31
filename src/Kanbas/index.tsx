@@ -6,6 +6,7 @@ import Courses from "./Courses";
 import * as db from "./Database";
 import { useState } from "react";
 import "./styles.css";
+import ProtectedRoute from "./Account/ProtectedRoute";
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>(db.courses);
@@ -19,7 +20,7 @@ export default function Kanbas() {
   const deleteCourse = (courseId: any) => {
     setCourses(courses.filter((course) => course._id !== courseId));
   };
-  
+
   const updateCourse = () => {
     setCourses(
       courses.map((c) => {
@@ -40,6 +41,7 @@ export default function Kanbas() {
             <Route path="/" element={<Navigate to="/Kanbas/Dashboard" />} />
             <Route path="/Account/*" element={<Account />} />
             <Route path="/Dashboard" element={
+              <ProtectedRoute>
                 <Dashboard
                   courses={courses}
                   course={course}
@@ -48,9 +50,12 @@ export default function Kanbas() {
                   deleteCourse={deleteCourse}
                   updateCourse={updateCourse}
                 />
+              </ProtectedRoute>
               }
             />
-            <Route path="/Courses/:cid/*" element={<Courses courses={courses} />} />
+            <Route path="/Courses/:cid/*" element={
+              <ProtectedRoute><Courses courses={courses} /></ProtectedRoute>} 
+            />
             <Route path="/Calendar" element={<h1>Calendar</h1>} />
             <Route path="/Inbox" element={<h1>Inbox</h1>} />
           </Routes>

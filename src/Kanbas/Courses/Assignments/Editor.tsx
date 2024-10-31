@@ -1,45 +1,74 @@
-import { useParams } from "react-router";
-import * as db from "../../Database";
-const assignments = db.assignments
+import React from "react";
+import { useParams, useNavigate} from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { updateAssignment } from "./reducer";
 
 
 export default function AssignmentEditor() {
   const {cid, aid } = useParams();
-  const assignment = assignments.find(assignment => assignment._id === aid)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
 
-   //Display the title of the selected assignment as well as the 
-   // description, points, due date, and available date. 
+  const assignment = assignments.find((assignment: any) => assignment._id === aid);
+
+  const handleInputChange = (field: string, value: any) => {
+    dispatch(updateAssignment({ ...assignment, [field]: value }));
+  };
+
+    const handleSave = () => {
+    dispatch(updateAssignment(assignment));
+    navigate(`/Kanbas/Courses/${cid}/Assignments`);
+  };
+
+  const handleCancel = () => {
+    navigate(`/Kanbas/Courses/${cid}/Assignments`);
+  };
 
   return (
     <div id="wd-assignments-editor" className="container mt-4">
       <div className="mb-3">
         <label htmlFor="wd-name" className="form-label">Assignment Name</label>
-        <input id="wd-name" value={assignment?.title } className="form-control" />
+        <input
+          id="wd-name"
+          value={assignment?.title || ""}
+          onChange={(e) => handleInputChange("title", e.target.value)}
+          className="form-control"
+        />
       </div>
-
       <div className="mb-3">
         <label htmlFor="wd-description" className="form-label">Assignment Description</label>
         <div id="wd-description" className="form-control">
-        <p>
-          The assignment is <span className="text-danger">available online.</span> 
-        </p>
-        <p>{assignment?.description}
-        </p>
-        <p>The landing page should include the following:</p>
-        <ul>
-          <li>Your full name and section</li>
-          <li>Links to each of the lab assignments</li>
-          <li>Link to the Kanbas application</li>
-          <li>Links to all relevant source repositories</li>
-        </ul>
-        <p>The Kanbas application should include a link to navigate back to the landing page.</p>
+          <p>
+            The assignment is <span className="text-danger">available online.</span>
+          </p>
+         
+          <textarea
+            className="form-control mb-3"
+            value={assignment?.description || ""}
+            onChange={(e) => handleInputChange("description", e.target.value)}
+            rows={5}
+          />
+          <p>The landing page should include the following:</p>
+          <ul>
+            <li>Your full name and section</li>
+            <li>Links to each of the lab assignments</li>
+            <li>Link to the Kanbas application</li>
+            <li>Links to all relevant source repositories</li>
+          </ul>
+          <p>The Kanbas application should include a link to navigate back to the landing page.</p>
         </div>
       </div>
 
       <div className="mb-3 row">
         <label htmlFor="wd-points" className="col-sm-2 col-form-label text-end">Points</label>
         <div className="col-sm-10">
-          <input id="wd-points" value={assignment?.points} className="form-control" />
+          <input
+            id="wd-points"
+            value={assignment?.points}
+            className="form-control"
+            onChange={(e) => handleInputChange("points", e.target.value)}
+          />
         </div>
       </div>
 
@@ -106,24 +135,45 @@ export default function AssignmentEditor() {
       <div className="mb-3 row">
         <label htmlFor="wd-due-date" className="col-sm-2 col-form-label text-end">Due</label>
         <div className="col-sm-10">
-          <input type="date" id="wd-due-date" value={assignment?.due} className="form-control" />
+          <input
+            type="date"
+            id="wd-due-date"
+            value={assignment?.due || ""}
+            onChange={(e) => handleInputChange("due", e.target.value)}
+            className="form-control"
+          />
         </div>
       </div>
 
       <div className="mb-3 row">
         <label htmlFor="wd-available-from" className="col-sm-2 col-form-label text-end">Available from</label>
         <div className="col-sm-4">
-          <input type="date" id="wd-available-from" value={assignment?.available} className="form-control" />
+          <input
+            type="date"
+            id="wd-available-from"
+            value={assignment?.available || ""}
+            onChange={(e) => handleInputChange("available", e.target.value)}
+            className="form-control"
+          />
         </div>
+        
         <label htmlFor="wd-available-until" className="col-sm-2 col-form-label text-end">Until</label>
         <div className="col-sm-4">
-          <input type="date" id="wd-available-until" value={assignment?.due} className="form-control" />
+          <input
+            type="date"
+            id="wd-available-until"
+            value={assignment?.until || ""}
+            onChange={(e) => handleInputChange("until", e.target.value)}
+            className="form-control"
+          />
         </div>
       </div>
       <hr/>
        <div className="d-flex justify-content-end mt-4">
-      <button className="btn btn-secondary me-2">Cancel</button>
-      <button className="btn btn-danger">Save</button>
+      <button className="btn btn-secondary me-2" onClick={handleCancel}>Cancel</button>
+      <button className="btn btn-danger" onClick={handleSave}>
+        Save
+      </button>
     </div>
     </div>
 

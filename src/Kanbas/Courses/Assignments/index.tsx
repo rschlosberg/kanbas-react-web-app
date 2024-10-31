@@ -1,17 +1,20 @@
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
 import { BsGripVertical } from "react-icons/bs";
-import LessonControlButtons from "../Modules/LessonControlButtons";
+import LessonControlButtons from "./LessonControlButtons";
 import { FaSearch } from "react-icons/fa";
-import GreenCheckmark from "../Modules/GreenCheckmark";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { useParams } from "react-router";
 
-import * as db from "../../Database";
-
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
-  const assignments = db.assignments
   const { cid } = useParams();
+
+  const dispatch = useDispatch();
+  const { assignments } = useSelector((state: any) => state.assignmentReducer);
 
 
   return (
@@ -35,9 +38,13 @@ export default function Assignments() {
         <button id="wd-add-assignment-group" className="btn btn-secondary me-2">
           + Group
         </button>
-        <button id="wd-add-assignment" className="btn btn-danger">
+        <a
+          id="wd-add-assignment"
+          href={`#/Kanbas/Courses/${cid}/Assignments/Editor`}
+          className="btn btn-danger"
+        >
           + Assignment
-        </button>
+        </a>
       </div>
     </div>
  
@@ -81,7 +88,10 @@ export default function Assignments() {
                       </div>
                     </div>
                 </div>
-                <LessonControlButtons />
+                <LessonControlButtons assignmentId={assignment._id} deleteAssignment={(assignmentId) => {
+                            dispatch(deleteAssignment(assignmentId));
+                }}/>
+                
               </div>
             </li>
         ))}
