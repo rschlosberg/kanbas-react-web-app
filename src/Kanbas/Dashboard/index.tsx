@@ -21,8 +21,6 @@ export default function Dashboard(
   // Conditionally filter the courses based on the enrollment state
   const displayedCourses = courseFilter ? courses : everyCourseOffered;
 
-
-  debugger;
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
