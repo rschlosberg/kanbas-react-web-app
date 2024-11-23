@@ -11,7 +11,7 @@ export default function EnrolledCourseRoute({ children, enrolledCourses }: { chi
     return <Navigate to="/Kanbas/Account/Signin" />;
   }
 
-  if (currentUser.role === "STUDENT" && isEnrolled) {
+  if ((currentUser.role === "STUDENT" && isEnrolled) || (currentUser.role === "FACULTY")) {
     return <>{children}</>;
   }
 

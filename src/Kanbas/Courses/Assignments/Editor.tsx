@@ -1,23 +1,44 @@
 import React from "react";
-import { useParams, useNavigate} from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
-import { updateAssignment } from "./reducer";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
+import { addAssignment, updateAssignment } from "./reducer";
+import { setAssignments, deleteAssignment } from "./reducer";
+
 
 
 export default function AssignmentEditor() {
-  const {cid, aid } = useParams();
+  const { cid, aid } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
-
+  console.log(assignments)
   const assignment = assignments.find((assignment: any) => assignment._id === aid);
+
+  const createAssignmentForCourse = async () => {
+    if (!cid) return;
+    const newAssignment = { course: cid };
+    const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
+    dispatch(addAssignment(assignment));
+  };
+
+  const saveAssignment = async (assignment: any) => {
+    await assignmentsClient.updateAssignment(assignment);
+    dispatch(updateAssignment(assignment));
+  };
 
   const handleInputChange = (field: string, value: any) => {
     dispatch(updateAssignment({ ...assignment, [field]: value }));
   };
 
-    const handleSave = () => {
-    dispatch(updateAssignment(assignment));
+  const handleSave = async () => {
+    if (aid === "Editor") {
+      await createAssignmentForCourse();
+    }
+    else {
+      await saveAssignment({ ...assignment });
+    }
     navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };
 
@@ -31,7 +52,7 @@ export default function AssignmentEditor() {
         <label htmlFor="wd-name" className="form-label">Assignment Name</label>
         <input
           id="wd-name"
-          value={assignment?.title || ""}
+          value={assignment?.title}
           onChange={(e) => handleInputChange("title", e.target.value)}
           className="form-control"
         />
@@ -42,10 +63,10 @@ export default function AssignmentEditor() {
           <p>
             The assignment is <span className="text-danger">available online.</span>
           </p>
-         
+
           <textarea
             className="form-control mb-3"
-            value={assignment?.description || ""}
+            value={assignment?.description}
             onChange={(e) => handleInputChange("description", e.target.value)}
             rows={5}
           />
@@ -138,7 +159,7 @@ export default function AssignmentEditor() {
           <input
             type="date"
             id="wd-due-date"
-            value={assignment?.due || ""}
+            value={assignment?.due}
             onChange={(e) => handleInputChange("due", e.target.value)}
             className="form-control"
           />
@@ -151,32 +172,32 @@ export default function AssignmentEditor() {
           <input
             type="date"
             id="wd-available-from"
-            value={assignment?.available || ""}
+            value={assignment?.available}
             onChange={(e) => handleInputChange("available", e.target.value)}
             className="form-control"
           />
         </div>
-        
+
         <label htmlFor="wd-available-until" className="col-sm-2 col-form-label text-end">Until</label>
         <div className="col-sm-4">
           <input
             type="date"
             id="wd-available-until"
-            value={assignment?.until || ""}
+            value={assignment?.until}
             onChange={(e) => handleInputChange("until", e.target.value)}
             className="form-control"
           />
         </div>
       </div>
-      <hr/>
-       <div className="d-flex justify-content-end mt-4">
-      <button className="btn btn-secondary me-2" onClick={handleCancel}>Cancel</button>
-      <button className="btn btn-danger" onClick={handleSave}>
-        Save
-      </button>
-    </div>
+      <hr />
+      <div className="d-flex justify-content-end mt-4">
+        <button className="btn btn-secondary me-2" onClick={handleCancel}>Cancel</button>
+        <button className="btn btn-danger" onClick={handleSave}>
+          Save
+        </button>
+      </div>
     </div>
 
-    
+
   );
 }
