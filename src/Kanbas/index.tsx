@@ -51,17 +51,20 @@ export default function Kanbas() {
 
   const [enrollments, setEnrollments] = useState<any[]>([]);
 
-  const addEnrollment = (userId: string, courseId: string) => {
+  const addEnrollment = async (userId: string, courseId: string) => {
     const newEnrollment = {
       _id: new Date().getTime().toString(), // unique ID
       user: userId,
       course: courseId,
     };
 
-    setEnrollments([...enrollments, newEnrollment]);
+    const savedEnrollment = await courseClient.addEnrollment(newEnrollment);
+
+    setEnrollments([...enrollments, savedEnrollment]);
   };
 
-  const deleteEnrollment = (courseId: string) => {
+  const deleteEnrollment = async (userId: string, courseId: string) => {
+    const deletedEnrollment = await courseClient.deleteEnrollment(userId, courseId)
     setEnrollments((prevEnrollments) => {
       const updatedEnrollments = prevEnrollments.filter((enrollment) => enrollment.course !== courseId);
       return updatedEnrollments;
@@ -104,6 +107,7 @@ export default function Kanbas() {
                   courses={courses}
                   course={course}
                   setCourse={setCourse}
+                  setCourses={setCourses}
                   addNewCourse={addNewCourse}
                   deleteCourse={deleteCourse}
                   updateCourse={updateCourse}

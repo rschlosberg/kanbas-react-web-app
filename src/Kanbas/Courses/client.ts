@@ -18,7 +18,21 @@ export const updateCourse = async (course: any) => {
 };
 
 //////////// ENROLLMENTS
+export const addEnrollment = async (enrollment: any) => {
+    const response = await axios.post(
+    `${COURSES_API}/enrollments`,
+    enrollment
+  );
+  return response.data;
+}
 
+export const deleteEnrollment = async (userId: string, courseId: string) => {
+    const response = await axios.delete(
+    `${COURSES_API}/enrollments/${userId}/${courseId}`,
+  );
+  console.log(response)
+  return response.data;
+}
 
 
 
