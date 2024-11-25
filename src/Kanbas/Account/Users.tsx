@@ -9,7 +9,6 @@ export default function Users() {
     const [role, setRole] = useState("");
     const [name, setName] = useState("");
 
-
     const fetchUsers = async () => {
         const users = await client.findAllUsers();
         setUsers(users);
@@ -39,9 +38,6 @@ export default function Users() {
             fetchUsers();
         }
     };
-
-
-
 
     return (
         <div>
