@@ -30,7 +30,6 @@ export const deleteEnrollment = async (userId: string, courseId: string) => {
     const response = await axios.delete(
     `${COURSES_API}/enrollments/${userId}/${courseId}`,
   );
-  console.log(response)
   return response.data;
 }
 
@@ -42,7 +41,6 @@ export const deleteEnrollment = async (userId: string, courseId: string) => {
 export const findModulesForCourse = async (courseId: string) => {
   const response = await axios
     .get(`${COURSES_API}/${courseId}/modules`);
-    console.log(response.data)
   return response.data;
 };
 
@@ -58,7 +56,6 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
 export const findAssignmentsForCourse = async (assignmentId: string) => {
   const response = await axios
     .get(`${COURSES_API}/${assignmentId}/assignments`);
-    console.log(response.data)
   return response.data;
 };
 
