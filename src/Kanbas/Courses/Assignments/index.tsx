@@ -97,7 +97,7 @@ export default function Assignments() {
                       <span className="text-danger">{assignment.title}</span> | <b>Not available until </b>{(new Date(assignment.available)).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} |
                     </div>
                     <div>
-                      <b>Due </b>{(new Date(assignment.due)).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} | 100 pts
+                      <b>Due </b>{(new Date(assignment.due)).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} | {assignment.points || "Points not yet assigned"}
                     </div>
                   </div>
                 </div>

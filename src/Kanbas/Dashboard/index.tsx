@@ -3,33 +3,32 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 export default function Dashboard(
 
-  { courses, course, enrollments, allCourses, setCourse, setCourses, addNewCourse,
-    deleteCourse, updateCourse, addEnrollment, deleteEnrollment }: {
-      courses: any[]; allCourses: any[]; course: any; enrollments: any[]; setCourse: (course: any) => void; setCourses: (courses: any) => void;
+  { courses, course, enrollments, enrolling, setCourse, addNewCourse,
+    deleteCourse, updateCourse, updateEnrollment, setEnrolling }: {
+      courses: any[]; course: any; enrollments: any[]; setCourse: (course: any) => void;
       addNewCourse: () => void; deleteCourse: (course: any) => void;
-      updateCourse: () => void; addEnrollment: (course: any, user: any) => void;
-      deleteEnrollment: (userId: string, course: any) => void;
+      updateCourse: () => void;
+      updateEnrollment: (courseId: string, enrolled: boolean) => void;
+      enrolling: boolean; setEnrolling: (enrolling: boolean) => void;
     }) {
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
 
-  const [everyCourseOffered, setEveryCourseOffered] = useState(allCourses)
+  // const [everyCourseOffered, setEveryCourseOffered] = useState(allCourses)
 
   const [courseFilter, setCourseFilter] = useState(false);
 
   // Conditionally filter the courses based on the enrollment state
-  const displayedCourses = courseFilter ? courses : everyCourseOffered;
+  const displayedCourses = courses;
 
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
       {currentUser.role === "STUDENT" ?
         <>
-          <button className="btn btn-primary float-end"
-            id="wd-add-new-course-click"
-            onClick={() => setCourseFilter(!courseFilter)} >
-            {courseFilter ? "View All Courses" : "View Enrollments"}
+          <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+            {enrolling ? "My Courses" : "All Courses"}
           </button>
           <br />
           <br />
@@ -41,7 +40,7 @@ export default function Dashboard(
               id="wd-add-new-course-click"
               onClick={() => {
                 addNewCourse();
-                setEveryCourseOffered((prevEveryCourseOffered) => [...prevEveryCourseOffered, course]); // Call the second function
+                // setCourses((prevCourses) => [...prevCourses, course]); // Call the second function
               }}
             >
               Add
@@ -72,13 +71,14 @@ export default function Dashboard(
       </h2> <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {displayedCourses.map((course) => (
+          {courses.map((course) => (
             <div className="wd-dashboard-course col" style={{ width: "300px" }} >
               <div className="card rounded-3 overflow-hidden">
                 <Link className="wd-dashboard-course-link text-decoration-none text-dark" to={`/Kanbas/Courses/${course._id}/Home`}>
                   <img src="/images/teslabot.jpg" width={200} className="card-img-top" />
                   <div className="card-body">
                     <h5 className="wd-dashboard-course-title card-title">
+
                       {course.name}
                     </h5>
                     <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
@@ -86,33 +86,18 @@ export default function Dashboard(
                     </p>
                     <button className="btn btn-primary">Go</button>
                     {currentUser.role === "STUDENT" ? (
-                      courses.some(c => c._id === course._id) ? (
-                        // If student is enrolled
+                      enrolling && (
                         <button
+                          className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`}
                           onClick={(event) => {
                             event.preventDefault();
-                            deleteEnrollment(currentUser._id, course._id);
-                            setCourses(courses.filter(c => c._id !== course._id));
+                            updateEnrollment(course._id, !course.enrolled);
                           }}
-                          className="btn btn-danger float-end"
-                          id="wd-delete-course-click"
                         >
-                          Un-Enroll
-                        </button>
-                      ) : (
-                        // If student is not enrolled
-                        <button
-                          onClick={(event) => {
-                            event.preventDefault();
-                            addEnrollment(currentUser._id, course._id);
-                            setCourses((prevEnrolledCourses: any) => [...prevEnrolledCourses, course]);
-                          }}
-                          className="btn btn-success float-end"
-                          id="wd-enroll-course-click"
-                        >
-                          Enroll
+                          {course.enrolled ? "Unenroll" : "Enroll"}
                         </button>
                       )
+
                     ) : (
                       // For non-students (admin or instructor actions)
                       <>
@@ -120,7 +105,7 @@ export default function Dashboard(
                           onClick={(event) => {
                             event.preventDefault();
                             deleteCourse(course._id);
-                            setEveryCourseOffered(everyCourseOffered.filter(c => c._id !== course._id));
+                            // setEveryCourseOffered(everyCourseOffered.filter(c => c._id !== course._id));
                           }}
                           className="btn btn-danger float-end"
                           id="wd-delete-course-click"

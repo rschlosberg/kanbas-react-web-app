@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import * as coursesClient from "../client";
 import * as assignmentsClient from "./client";
 import { addAssignment, updateAssignment } from "./reducer";
 import { setAssignments, deleteAssignment } from "./reducer";
-
 
 
 export default function AssignmentEditor() {
@@ -15,9 +14,19 @@ export default function AssignmentEditor() {
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const assignment = assignments.find((assignment: any) => assignment._id === aid);
 
+  const [assignmentFields, setAssignmentFields] = useState({
+    course: cid,
+    title: "",
+    description: "",
+    points: "",
+    due: "",
+    availableFrom: "",
+    availableUntil: "",
+  });
+
   const createAssignmentForCourse = async () => {
     if (!cid) return;
-    const newAssignment = { course: cid };
+    const newAssignment = assignmentFields;
     const assignment = await coursesClient.createAssignmentForCourse(cid, newAssignment);
     dispatch(addAssignment(assignment));
   };
@@ -28,7 +37,14 @@ export default function AssignmentEditor() {
   };
 
   const handleInputChange = (field: string, value: any) => {
-    dispatch(updateAssignment({ ...assignment, [field]: value }));
+    if (assignment) {
+      dispatch(updateAssignment({ ...assignment, [field]: value }));
+    } else {
+      setAssignmentFields((prevFields) => ({
+        ...prevFields,
+        [field]: value,
+      }));
+    }
   };
 
   const handleSave = async () => {
