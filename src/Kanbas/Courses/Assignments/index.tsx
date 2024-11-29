@@ -102,9 +102,6 @@ export default function Assignments() {
                   </div>
                 </div>
                 <LessonControlButtons assignmentId={assignment._id} deleteAssignment={(assignmentId) => removeAssignment(assignmentId)}
-                //   deleteAssignment={(assignmentId) => {
-                //   dispatch(deleteAssignment(assignmentId));
-                // }} 
                 />
 
               </div>
