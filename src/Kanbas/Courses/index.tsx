@@ -9,6 +9,8 @@ import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
 import * as client from "./client";
+import Quizzes from "./Quizzes";
+import QuizEditor from "./Quizzes/Editor";
 
 
 export default function Courses({ courses }: { courses: any[]; }) {
@@ -16,6 +18,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
   const { pathname } = useLocation();
   const course = courses.find((course) => course._id === cid);
   const [peopleInClass, setPeopleInClass] = useState<any[]>([]);
+  const [quizzes, setQuizzes] = useState<any[]>([]);
+
 
   const fetchPeopleInClass = async (cid: string) => {
     const people = await client.findUsersForCourse(cid);
@@ -48,6 +52,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
             <Route path="Modules" element={<Modules />} />
             <Route path="Assignments" element={<Assignments />} />
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+            <Route path="Quizzes" element={<Quizzes quizzes={quizzes} setQuizzes={setQuizzes} />} />
+            <Route path="Quizzes/:qid" element={<QuizEditor quizzes={quizzes} setQuizzes={setQuizzes} />} />
             <Route path="People" element={<PeopleTable users={peopleInClass} />} />
           </Routes>
         </div>
