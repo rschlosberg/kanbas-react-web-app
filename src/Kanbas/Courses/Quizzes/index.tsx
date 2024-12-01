@@ -11,10 +11,13 @@ import { useNavigate } from "react-router-dom";
 
 import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
+import StudentQuizPage from "./StudentQuizPage";
 
 export default function Quizzes({ quizzes, setQuizzes }: { quizzes: any, setQuizzes: (quiz: any) => void }) {
     const { cid } = useParams();
     const navigate = useNavigate();
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+
 
 
     const fetchQuizzes = async () => {
@@ -49,15 +52,17 @@ export default function Quizzes({ quizzes, setQuizzes }: { quizzes: any, setQuiz
                     />
                 </div>
 
-                <div className="d-flex">
-                    <a
-                        id="wd-add-assignment"
-                        href={`#/Kanbas/Courses/${cid}/Quizzes/Editor`}
-                        className="btn btn-danger"
-                    >
-                        + Quiz
-                    </a>
-                </div>
+                {currentUser.role === "FACULTY" &&
+                    <div className="d-flex">
+                        <a
+                            id="wd-add-assignment"
+                            href={`#/Kanbas/Courses/${cid}/Quizzes/Editor`}
+                            className="btn btn-danger"
+                        >
+                            + Quiz
+                        </a>
+                    </div>
+                }
             </div>
 
             <ul id="wd-assignment-list" className="list-group rounded-0">
@@ -83,12 +88,7 @@ export default function Quizzes({ quizzes, setQuizzes }: { quizzes: any, setQuiz
                                 <div className="d-flex align-items-center">
                                     <BsGripVertical className="me-3 fs-3" />
                                     <div>
-                                        <a
-                                            className="wd-assignment-link text-decoration-none text-dark fs-5"
-                                            href={`#/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}
-                                        >
-                                            {quiz.title}
-                                        </a>
+                                        {quiz.title}
                                         <div className="text-muted mt-1">
                                             <span className="text-danger">{quiz.published}</span> | <b>Not available until </b>{(new Date(quiz.availableStartDate)).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })} |
                                         </div>
@@ -97,26 +97,34 @@ export default function Quizzes({ quizzes, setQuizzes }: { quizzes: any, setQuiz
                                         </div>
                                     </div>
                                 </div>
-                                <div className="d-flex justify-content-end gap-2">
+                                {currentUser.role === "FACULTY" ? (
+                                    <div className="d-flex justify-content-end gap-2">
+                                        <button
+                                            className="btn"
+                                            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`)}
+                                        >
+                                            <FaPencil className="text-success me-2 mb-1" />
+                                        </button>
+                                        <button
+                                            className="btn"
+                                            onClick={async () => {
+                                                await quizzesClient.deleteQuiz(quiz._id);
+                                                setQuizzes((prevQuizzes: any) => prevQuizzes.filter((q: { _id: any; }) => q._id !== quiz._id));
+                                            }}
+                                        >
+                                            <FaTrash className="text-danger me-2 mb-1" />
+                                        </button>
+                                    </div>
+                                ) : (
                                     <button
                                         className="btn"
-                                        onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`)}
+                                        onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/StudentQuizPage/${quiz._id}`)}
                                     >
                                         <FaPencil className="text-success me-2 mb-1" />
                                     </button>
-                                    <button
-                                        className="btn"
-                                        onClick={async () => {
-                                            await quizzesClient.deleteQuiz(quiz._id);
-                                            setQuizzes((prevQuizzes: any) => prevQuizzes.filter((q: { _id: any; }) => q._id !== quiz._id));
-                                        }}
-                                    >
-                                        <FaTrash className="text-danger me-2 mb-1" />
-                                    </button>
-                                </div>
+                                )}
 
 
-                                {/* <LessonControlButtons assignmentId={assignment._id} deleteAssignment={(assignmentId) => removeAssignment(assignmentId)}/> */}
 
                             </div>
                         </li>

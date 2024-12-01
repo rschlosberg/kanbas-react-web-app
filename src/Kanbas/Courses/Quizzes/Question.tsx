@@ -13,6 +13,7 @@ export default function Question({
     question: any;
     updateQuestion: (question: any) => void;
 }) {
+
     return (
         <>
             <div className="row mb-3 align-items-center">

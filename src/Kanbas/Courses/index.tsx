@@ -11,6 +11,7 @@ import PeopleTable from "./People/Table";
 import * as client from "./client";
 import Quizzes from "./Quizzes";
 import QuizEditor from "./Quizzes/Editor";
+import StudentQuizPage from "./Quizzes/StudentQuizPage";
 
 
 export default function Courses({ courses }: { courses: any[]; }) {
@@ -54,6 +55,7 @@ export default function Courses({ courses }: { courses: any[]; }) {
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="Quizzes" element={<Quizzes quizzes={quizzes} setQuizzes={setQuizzes} />} />
             <Route path="Quizzes/:qid" element={<QuizEditor quizzes={quizzes} setQuizzes={setQuizzes} />} />
+            <Route path="Quizzes/StudentQuizPage/:qid" element={<StudentQuizPage quizzes={quizzes} />} />
             <Route path="People" element={<PeopleTable users={peopleInClass} />} />
           </Routes>
         </div>

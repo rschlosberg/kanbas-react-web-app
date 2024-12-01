@@ -73,22 +73,20 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
     }));
   };
 
-  const handleSave = async () => {
+  const handleSave = async (fields = quizFields) => {
     try {
       if (cid) {
+        fields.questions.forEach((question) => {
+          question.correctAnswers = question.correctAnswers?.filter((answer) => answer.length > 0);
+        });
+
         if (qid === "Editor") {
-          quizFields.questions.forEach(question => {
-            question.correctAnswers = question.correctAnswers?.filter(answer => answer.length > 0)
-          })
-          const newQuiz = await coursesClient.createQuizForCourse(cid, quizFields);
-          setQuizzes([...quizzes, newQuiz])
+          const newQuiz = await coursesClient.createQuizForCourse(cid, fields);
+          setQuizzes([...quizzes, newQuiz]);
           navigate(`/Kanbas/Courses/${cid}/quizzes`);
         } else {
-          quizFields.questions.forEach(question => {
-            question.correctAnswers = question.correctAnswers?.filter(answer => answer.length > 0)
-          })
-          const updatedQuiz = await quizzesClient.updateQuiz(quizFields);
-          setQuizzes([...quizzes, updatedQuiz])
+          const updatedQuiz = await quizzesClient.updateQuiz(fields);
+          setQuizzes([...quizzes, updatedQuiz]);
           navigate(`/Kanbas/Courses/${cid}/quizzes`);
         }
       }
@@ -96,6 +94,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
       console.error("Error saving quiz:", error);
     }
   };
+
 
   const handleCancel = () => {
     navigate(`/Kanbas/Courses/${cid}/quizzes`);
@@ -365,9 +364,19 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
       {/* Save and Cancel */}
       <div className="d-flex justify-content-end mt-4">
         <button className="btn btn-secondary me-2" onClick={handleCancel}>Cancel</button>
-        <button className="btn btn-danger" onClick={handleSave}>Save</button>
+        <button
+          className="btn btn-secondary me-2"
+          onClick={() => {
+            const updatedFields = { ...quizFields, published: true };
+            setQuizFields(updatedFields);
+            handleSave(updatedFields);
+          }}
+        >
+          Save & Publish
+        </button>
+        <button className="btn btn-primary" onClick={() => handleSave(quizFields)}>Save</button>
       </div>
-    </div>
+    </div >
   );
 
 }

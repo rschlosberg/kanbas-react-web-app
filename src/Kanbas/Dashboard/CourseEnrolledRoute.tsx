@@ -5,13 +5,13 @@ export default function EnrolledCourseRoute({ children, enrolledCourses }: { chi
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { cid } = useParams();
 
-  const isEnrolled = enrolledCourses.some((enrollment: any) => enrollment.course === cid && currentUser._id === enrollment.user);
+  // const isEnrolled = enrolledCourses.some((enrollment: any) => enrollment.course === cid && currentUser._id === enrollment.user);
 
   if (!currentUser) {
     return <Navigate to="/Kanbas/Account/Signin" />;
   }
 
-  if ((currentUser.role === "STUDENT" && isEnrolled) || (currentUser.role === "FACULTY")) {
+  if ((currentUser.role === "STUDENT") || (currentUser.role === "FACULTY")) {
     return <>{children}</>;
   }
 
