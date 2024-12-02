@@ -2,7 +2,7 @@
 
 
 
-export default function TrueFalse({ question, updateQuestion }: { question: any, updateQuestion: (question: any) => void }) {
+export default function TrueFalse({ index, question, updateQuestion }: { index: number, question: any, updateQuestion: (question: any) => void }) {
 
     return (
         <div className="row mb-3 align-items-center">
@@ -14,30 +14,30 @@ export default function TrueFalse({ question, updateQuestion }: { question: any,
                     <input
                         type="radio"
                         className="btn-check"
-                        name="true-false"
-                        id="true-option"
+                        name={`true-${index}`}
+                        id={`true-option-${index}`}
                         value="true"
                         checked={question.correctAnswers?.[0] === "true"}
                         onChange={() =>
                             updateQuestion({ ...question, correctAnswers: ["true"] })
                         }
                     />
-                    <label className="btn btn-outline-primary" htmlFor="true-option">
+                    <label className="btn btn-outline-primary" htmlFor={`true-option-${index}`}>
                         True
                     </label>
 
                     <input
                         type="radio"
                         className="btn-check"
-                        name="true-false"
-                        id="false-option"
+                        name={`false-${index}`}
+                        id={`false-option-${index}`}
                         value="false"
                         checked={question.correctAnswers?.[0] === "false"}
                         onChange={() =>
                             updateQuestion({ ...question, correctAnswers: ["false"] })
                         }
                     />
-                    <label className="btn btn-outline-primary" htmlFor="false-option">
+                    <label className="btn btn-outline-primary" htmlFor={`false-option-${index}`}>
                         False
                     </label>
                 </div>

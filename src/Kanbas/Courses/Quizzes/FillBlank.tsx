@@ -1,6 +1,6 @@
 import { FaTrash, FaTimes } from "react-icons/fa";
 
-export default function FillBlank({ question, updateQuestion }: { question: any, updateQuestion: (question: any) => void }) {
+export default function FillBlank({ index, question, updateQuestion }: { index: number, question: any, updateQuestion: (question: any) => void }) {
     let correctAnswers = question.correctAnswers || [""];
 
 

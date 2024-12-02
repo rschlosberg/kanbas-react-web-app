@@ -100,6 +100,12 @@ export default function Quizzes({ quizzes, setQuizzes }: { quizzes: any, setQuiz
                                 {currentUser.role === "FACULTY" ? (
                                     <div className="d-flex justify-content-end gap-2">
                                         <button
+                                            className="btn btn-secondary"
+                                            onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/StudentQuizPage/${quiz._id}`)}
+                                        >
+                                            Preview Quiz
+                                        </button>
+                                        <button
                                             className="btn"
                                             onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`)}
                                         >

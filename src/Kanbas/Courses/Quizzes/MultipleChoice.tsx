@@ -2,7 +2,7 @@
 
 
 
-export default function MultipleChoice({ question, updateQuestion }: { question: any, updateQuestion: (question: any) => void }) {
+export default function MultipleChoice({ index, question, updateQuestion }: { index: number, question: any, updateQuestion: (question: any) => void }) {
 
     return (
 

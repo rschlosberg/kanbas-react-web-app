@@ -101,7 +101,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
   };
 
   const totalPoints = quizFields.questions?.reduce((sum, question) => {
-    return sum + (question.pointsWorth || 0);
+    return sum + (Number(question.pointsWorth) || 0);
   }, 0); // Initial sum is 0
 
 
@@ -144,6 +144,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
                   <div className="card-body">
                     <Question
                       key={index}
+                      index={index}
                       question={q}
                       updateQuestion={(updatedQuestion: any) => {
                         const updatedQuestions = [...quizFields.questions];

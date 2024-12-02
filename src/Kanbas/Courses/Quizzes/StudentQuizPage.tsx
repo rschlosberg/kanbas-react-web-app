@@ -6,6 +6,7 @@ import Question from "./Question";
 import { FaTrash } from "react-icons/fa";
 import { format } from "date-fns";
 import QuizTaker from "./QuizTaker";
+import AttemptHistoryTable from "./AttemptHistoryTable";
 
 
 export default function StudentQuizPage({
@@ -38,7 +39,7 @@ export default function StudentQuizPage({
         const newAttempt = await quizzesClient.postQuizAttempt(quizAttempt);
         setQuizAttempts([...quizAttempts, newAttempt])
 
-        // navigate(`/Kanbas/Courses/${cid}/quizzes`);
+        navigate(`/Kanbas/Courses/${cid}/quizzes/studentquizpage/${quiz._id}`);
 
     }
 
@@ -86,7 +87,12 @@ export default function StudentQuizPage({
                     <hr></hr>
                     <h3>Instructions</h3>
                     <div>{quiz?.description || "Proceed with the quiz. Once you start you will not be able to stop the time clock."}</div>
-                    <button className="btn btn-primary" onClick={() => setQuizInProgress(true)}>Take the Quiz</button>
+
+                    <div className="d-flex justify-content-center mt-3">
+                        <button className="btn btn-primary" onClick={() => setQuizInProgress(true)}>
+                            Take the Quiz
+                        </button>
+                    </div>
                 </>
             }
 
@@ -99,6 +105,10 @@ export default function StudentQuizPage({
                         <QuizTaker quiz={quiz} submitQuizAttempt={submitQuizAttempt} />
                     </div>
                 </>
+            }
+
+            {!quizInProgress &&
+                <AttemptHistoryTable quizAttempts={quizAttempts} quiz={quiz} />
             }
 
         </div>

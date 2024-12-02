@@ -7,9 +7,11 @@ import FillBlank from "./FillBlank";
 import { FaTrash } from "react-icons/fa";
 
 export default function Question({
+    index,
     question,
     updateQuestion,
 }: {
+    index: number,
     question: any;
     updateQuestion: (question: any) => void;
 }) {
@@ -63,15 +65,15 @@ export default function Question({
             <br />
 
             {question.type === "MULTIPLE CHOICE" && (
-                <MultipleChoice updateQuestion={updateQuestion} question={question} />
+                <MultipleChoice updateQuestion={updateQuestion} question={question} index={index} />
             )}
 
             {question.type === "TRUE/FALSE" && (
-                <TrueFalse updateQuestion={updateQuestion} question={question} />
+                <TrueFalse updateQuestion={updateQuestion} question={question} index={index} />
             )}
 
             {question.type === "FILL IN THE BLANK" && (
-                <FillBlank updateQuestion={updateQuestion} question={question} />
+                <FillBlank updateQuestion={updateQuestion} question={question} index={index} />
             )}
 
 
