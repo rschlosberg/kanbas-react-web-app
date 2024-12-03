@@ -4,6 +4,8 @@ import * as coursesClient from "../client";
 import * as quizzesClient from "./client";
 import Question from "./Question";
 import { FaTrash } from "react-icons/fa";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 
 export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQuizzes: (quiz: any) => void }) {
@@ -140,7 +142,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
             <>
 
               {quizFields.questions.map((q, index) => (
-                <div className="card rounded-3 overflow-hidden">
+                <div className="card rounded-3 overflow-hidden mb-3" key={index}>
                   <div className="card-body">
                     <Question
                       key={index}
@@ -173,12 +175,13 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
               ))}
 
               <button
+                className="btn btn-success mt-2"
                 onClick={() => {
                   quizFields.questions.push({ type: "MULTIPLE CHOICE" });
                   setQuizFields({ ...quizFields })
                 }}
               >
-                New Question
+                + New Question
               </button>
             </>
           )}
@@ -200,28 +203,141 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
             </div>
 
             {/* Description */}
-            <div className="mb-3">
-              <label htmlFor="wd-description" className="form-label">Description</label>
-              <textarea
+            <div className="mb-3" style={{ paddingBottom: "80px" }}>
+              <label htmlFor="wd-description" className="form-label">Quiz Instructions</label>
+              <ReactQuill
                 id="wd-description"
-                value={quizFields.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
-                rows={5}
-                className="form-control"
+                value={quizFields.description} // Bind value from state
+                onChange={(content) => handleInputChange("description", content)} // Update state on change
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ["bold", "italic", "underline", "strike"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link", "image"],
+                  ],
+                }} // Define toolbar options
+                theme="snow" // Use default theme
+                style={{ height: "100px" }}
               />
             </div>
 
-            {/* Points */}
-            {/* <div className="mb-3">
-              <label htmlFor="wd-points" className="form-label">Total Points</label>
-              <input
-                id="wd-points"
-                type="number"
-                value={quizFields.points}
-                onChange={(e) => handleInputChange("points", Number(e.target.value))}
-                className="form-control"
-              />
-            </div> */}
+            {/* Quiz Type */}
+            <div className="mb-3">
+              <label htmlFor="wd-quizType" className="form-label">Quiz Type</label>
+              <select
+                id="wd-quizType"
+                value={quizFields.quizType}
+                onChange={(e) => handleInputChange("quizType", e.target.value)}
+                className="form-select"
+              >
+                <option value="GRADED QUIZ">GRADED QUIZ</option>
+                <option value="PRACTICE QUIZ">PRACTICE QUIZ</option>
+                <option value="GRADED SURVEY">GRADED SURVEY</option>
+                <option value="UNGRADED SURVEY">UNGRADED SURVEY</option>
+              </select>
+            </div>
+
+
+            {/* Assignment Group */}
+            <div className="mb-3">
+              <label htmlFor="wd-assignmentGroup" className="form-label">Assignment Group</label>
+              <select
+                id="wd-assignmentGroup"
+                value={quizFields.assignmentGroup}
+                onChange={(e) => handleInputChange("assignmentGroup", e.target.value)}
+                className="form-select"
+              >
+                <option value="QUIZZES">QUIZZES</option>
+                <option value="EXAMS">EXAMS</option>
+                <option value="ASSIGNMENTS">ASSIGNMENTS</option>
+                <option value="PROJECT">PROJECT</option>
+              </select>
+            </div>
+
+            <div className="mb-3 p-3 border rounded">
+              <h6><b>Options</b></h6>
+
+              {/* Shuffle Questions */}
+              <div className="form-check mb-2">
+                <input
+                  id="wd-shuffleQuestions"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={quizFields.shuffleQuestions || true}
+                  onChange={(e) => handleInputChange("shuffleQuestions", e.target.checked)}
+                />
+                <label htmlFor="wd-shuffleQuestions" className="form-check-label">Shuffle Questions</label>
+              </div>
+
+              {/* Show Correct Answers */}
+              <div className="form-check mb-2">
+                <input
+                  id="wd-showCorrectAnswers"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={quizFields.showCorrectAnswers}
+                  onChange={(e) => handleInputChange("showCorrectAnswers", e.target.checked)}
+                />
+                <label htmlFor="wd-showCorrectAnswers" className="form-check-label">Show Correct Answers</label>
+              </div>
+
+              {/* Allow Multiple Attempts */}
+              <div className="form-check mb-2">
+                <input
+                  id="wd-multipleAttempts"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={quizFields.multipleAttempts || false}
+                  onChange={(e) => handleInputChange("multipleAttempts", e.target.checked)}
+                />
+                <label htmlFor="wd-multipleAttempts" className="form-check-label">Allow Multiple Attempts</label>
+              </div>
+
+              {/* Numeric Input for Attempts */}
+              {quizFields.multipleAttempts && (
+                <div className="row align-items-center mb-2">
+                  <label htmlFor="wd-howManyAttempts" className="col-auto col-form-label">Number of Attempts:</label>
+                  <div className="col-auto">
+                    <div className="input-group">
+                      <input
+                        id="wd-howManyAttempts"
+                        type="number"
+                        value={quizFields.howManyAttempts}
+                        onChange={(e) => handleInputChange("howManyAttempts", Number(e.target.value))}
+                        className="form-control"
+                        style={{ maxWidth: "80px" }}
+                      />
+                      <span className="input-group-text">Attempts</span>
+                    </div >
+                  </div>
+                </div>
+              )}
+
+              {/* Time Limit */}
+              <div className="row align-items-center mb-2">
+                <label htmlFor="wd-minutes" className="col-auto col-form-label">
+                  Time Limit:
+                </label>
+                <div className="col-auto">
+                  <div className="input-group">
+                    <input
+                      id="wd-minutes"
+                      type="number"
+                      className="form-control"
+                      value={quizFields.timeLimit || 20}
+                      onChange={(e) => handleInputChange("timeLimit", Number(e.target.value))}
+                      style={{ maxWidth: "80px" }}
+                    />
+                    <span className="input-group-text">Minutes</span>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+
+
 
             {/* Dates */}
             <div className="row">
@@ -257,96 +373,8 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
               </div>
             </div>
 
-            {/* Quiz Type */}
-            <div className="mb-3">
-              <label htmlFor="wd-quizType" className="form-label">Quiz Type</label>
-              <select
-                id="wd-quizType"
-                value={quizFields.quizType}
-                onChange={(e) => handleInputChange("quizType", e.target.value)}
-                className="form-select"
-              >
-                <option value="GRADED QUIZ">GRADED QUIZ</option>
-                <option value="PRACTICE QUIZ">PRACTICE QUIZ</option>
-                <option value="GRADED SURVEY">GRADED SURVEY</option>
-                <option value="UNGRADED SURVEY">UNGRADED SURVEY</option>
-              </select>
-            </div>
-
-            {/* Assignment Group */}
-            <div className="mb-3">
-              <label htmlFor="wd-assignmentGroup" className="form-label">Assignment Group</label>
-              <select
-                id="wd-assignmentGroup"
-                value={quizFields.assignmentGroup}
-                onChange={(e) => handleInputChange("assignmentGroup", e.target.value)}
-                className="form-select"
-              >
-                <option value="QUIZZES">QUIZZES</option>
-                <option value="EXAMS">EXAMS</option>
-                <option value="ASSIGNMENTS">ASSIGNMENTS</option>
-                <option value="PROJECT">PROJECT</option>
-              </select>
-            </div>
-
-            {/* Boolean Options */}
-            <div className="form-check mb-2">
-              <input
-                id="wd-shuffleQuestions"
-                type="checkbox"
-                className="form-check-input"
-                checked={quizFields.shuffleQuestions}
-                onChange={(e) => handleInputChange("shuffleQuestions", e.target.checked)}
-              />
-              <label htmlFor="wd-shuffleQuestions" className="form-check-label">Shuffle Questions</label>
-            </div>
-
-            <div className="form-check mb-2">
-              <input
-                id="wd-showCorrectAnswers"
-                type="checkbox"
-                className="form-check-input"
-                checked={quizFields.showCorrectAnswers}
-                onChange={(e) => handleInputChange("showCorrectAnswers", e.target.checked)}
-              />
-              <label htmlFor="wd-showCorrectAnswers" className="form-check-label">Show Correct Answers</label>
-            </div>
-
-            <div className="mb-2">
-              <input
-                id="wd-minutes"
-                className="form-input"
-                value={quizFields.timeLimit}
-                onChange={(e) => handleInputChange("timeLimit", e.target.value)}
-              />
-              <label htmlFor="wd-showCorrectAnswers" className="form-label"> Minutes</label>
-            </div>
 
 
-            <div className="form-check mb-2">
-              <input
-                id="wd-multipleAttempts"
-                type="checkbox"
-                className="form-check-input"
-                checked={quizFields.multipleAttempts}
-                onChange={(e) => handleInputChange("multipleAttempts", e.target.checked)}
-              />
-              <label htmlFor="wd-multipleAttempts" className="form-check-label">Allow Multiple Attempts</label>
-            </div>
-
-            {/* Numeric Input for Attempts */}
-            {quizFields.multipleAttempts && (
-              <div className="mb-3">
-                <label htmlFor="wd-howManyAttempts" className="form-label">How Many Attempts</label>
-                <input
-                  id="wd-howManyAttempts"
-                  type="number"
-                  value={quizFields.howManyAttempts}
-                  onChange={(e) => handleInputChange("howManyAttempts", Number(e.target.value))}
-                  className="form-control"
-                />
-              </div>
-            )}
 
             {/* Access Code */}
             <div className="mb-3">

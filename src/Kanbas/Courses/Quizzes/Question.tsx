@@ -5,6 +5,7 @@ import MultipleChoice from "./MultipleChoice";
 import TrueFalse from "./TrueFalse";
 import FillBlank from "./FillBlank";
 import { FaTrash } from "react-icons/fa";
+import ReactQuill from "react-quill";
 
 export default function Question({
     index,
@@ -35,15 +36,27 @@ export default function Question({
                     </select>
                 </div>
             </div>
-            <div className="mb-row mb-3 align-items-center">
-                <label htmlFor="wd-title" className="col-sm-3 col-form-label">Question Text:</label>
-                <textarea
-                    id="wd-title"
-                    rows={2}
-                    value={question.questionText}
-                    onChange={(e) => updateQuestion({ ...question, questionText: e.target.value })}
-                    className="form-control"
-                />
+
+
+            <div className="mb-row mb-3 align-items-center" style={{ paddingBottom: "80px" }}>
+                <label htmlFor="wd-question-text" className="col-sm-3 col-form-label">Question Text:</label>
+                <div className="col-sm-9">
+                    <ReactQuill
+                        id="wd-question-text"
+                        value={question.questionText} // Bind to the question text value
+                        onChange={(content) => updateQuestion({ ...question, questionText: content })} // Update state on change
+                        modules={{
+                            toolbar: [
+                                [{ header: [1, 2, false] }], // Header levels
+                                ["bold", "italic", "underline", "strike"], // Text formatting
+                                [{ list: "ordered" }, { list: "bullet" }], // Lists
+                                ["link", "image"], // Media
+                            ],
+                        }} // Customize the toolbar
+                        theme="snow" // Default theme
+                        style={{ height: "100px" }} // Optional: Adjust height
+                    />
+                </div>
             </div>
             <div className="row mb-3 align-items-center">
                 <label htmlFor="wd-title" className="col-auto col-form-label me-2">

@@ -10,7 +10,7 @@ export default function MultipleChoice({ index, question, updateQuestion }: { in
             <div className="row mb-2 align-items-center">
                 <div className="col"></div>
                 <div className="col-auto text-center">
-                    <label className="form-label mb-0">Mark Correct Answer</label>
+                    <label className="form-label mb-0"><i>*Fill input before marking as correct</i></label>
                 </div>
             </div>
             {Array(4).fill(0).map((item, index) => {
@@ -45,24 +45,28 @@ export default function MultipleChoice({ index, question, updateQuestion }: { in
                         </div>
 
                         {/* Checkbox for Correct Choice */}
-                        <div className="col-auto text-center">
-                            <input
-                                type="checkbox"
-                                checked={isCorrectAnswer}
-                                onChange={(e) => {
-                                    debugger;
-                                    let correctAnswers: any[] = [];
-                                    if (e.target.checked && multipleChoiceOption) {
-                                        correctAnswers = [multipleChoiceOption];
-                                    } else {
-                                        correctAnswers = [];
-                                    }
-                                    updateQuestion({ ...question, correctAnswers });
-                                }}
-                                className="form-check-input"
-                            />
+                        <div className="col-auto text-center ms-3">
+                            <div className="form-check">
+                                <input
+                                    type="checkbox"
+                                    checked={isCorrectAnswer}
+                                    onChange={(e) => {
+                                        let correctAnswers: any[] = [];
+                                        if (e.target.checked && multipleChoiceOption) {
+                                            correctAnswers = [multipleChoiceOption];
+                                        } else {
+                                            correctAnswers = [];
+                                        }
+                                        updateQuestion({ ...question, correctAnswers });
+                                    }}
+                                    className="form-check-input"
+                                    style={{ transform: "scale(1.5)" }} // Enlarges the checkbox for better visibility
+                                />
+                                <label className="form-check-label">Correct</label> {/* Optional label */}
+                            </div>
                         </div>
                     </div>
+
                 );
             })}
         </>
