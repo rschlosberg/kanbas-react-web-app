@@ -13,15 +13,18 @@ export default function Profile() {
     const updatedProfile = await client.updateUser(profile);
     dispatch(setCurrentUser(updatedProfile));
   };
+
   const fetchProfile = () => {
     if (!currentUser) return navigate("/Kanbas/Account/Signin");
     setProfile(currentUser);
   };
+
   const signout = async () => {
     await client.signout();
     dispatch(setCurrentUser(null));
     navigate("/Kanbas/Account/Signin");
   };
+
   useEffect(() => { fetchProfile(); }, []);
   return (
     <div className="wd-profile-screen container">
@@ -115,7 +118,7 @@ export default function Profile() {
               <select
                 id="wd-role"
                 className="form-select"
-                defaultValue={currentUser.role}
+                defaultValue={currentUser?.role}
                 onChange={(e) => setProfile({ ...profile, role: e.target.value })}
               >
                 <option value="FACULTY">Faculty</option>
@@ -128,7 +131,12 @@ export default function Profile() {
           <div className="row mb-3">
             <div className="col-sm-12">
               <button onClick={updateProfile} className="btn btn-primary w-100 mb-2">Update</button>
-              <button onClick={signout} className="btn btn-danger w-100 mb-2" id="wd-signout-btn">
+              <button
+                onClick={signout}
+                className="btn btn-danger w-100 mb-2"
+                id="wd-signout-btn"
+                type="button"
+              >
                 Sign out
               </button>
             </div>

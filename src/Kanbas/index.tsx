@@ -79,26 +79,6 @@ export default function Kanbas() {
     );
   };
 
-  // const addEnrollment = async (userId: string, courseId: string) => {
-  //   const newEnrollment = {
-  //     _id: new Date().getTime().toString(), // unique ID
-  //     user: userId,
-  //     course: courseId,
-  //   };
-
-  //   const savedEnrollment = await courseClient.addEnrollment(newEnrollment);
-
-  //   setEnrollments([...enrollments, savedEnrollment]);
-  // };
-
-  // const deleteEnrollment = async (userId: string, courseId: string) => {
-  //   const deletedEnrollment = await courseClient.deleteEnrollment(userId, courseId)
-  //   setEnrollments((prevEnrollments) => {
-  //     const updatedEnrollments = prevEnrollments.filter((enrollment) => enrollment.course !== courseId);
-  //     return updatedEnrollments;
-  //   });
-  // };
-
 
   const addNewCourse = async () => {
     const newCourse = await courseClient.createCourse(course);

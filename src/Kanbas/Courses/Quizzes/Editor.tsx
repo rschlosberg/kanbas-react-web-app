@@ -106,6 +106,12 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
     return sum + (Number(question.pointsWorth) || 0);
   }, 0); // Initial sum is 0
 
+  const formatDateForInput = (date: any) => {
+    if (!date) return ""; // Handle null/undefined cases
+    const formattedDate = new Date(date).toISOString().split("T")[0];
+    return formattedDate;
+  };
+
 
   return (
     <div id="wd-quiz-editor" className="container mt-4">
@@ -303,7 +309,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
                       <input
                         id="wd-howManyAttempts"
                         type="number"
-                        value={quizFields.howManyAttempts}
+                        value={quizFields.howManyAttempts || 1}
                         onChange={(e) => handleInputChange("howManyAttempts", Number(e.target.value))}
                         className="form-control"
                         style={{ maxWidth: "80px" }}
@@ -334,6 +340,42 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
                 </div>
               </div>
 
+              {/* One Question at a Time */}
+              <div className="form-check mb-2">
+                <input
+                  id="wd-oneQuestionAtATime"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={quizFields.oneQuestionAtATime || false}
+                  onChange={(e) => handleInputChange("oneQuestionAtATime", e.target.checked)}
+                />
+                <label htmlFor="wd-oneQuestionAtATime" className="form-check-label">One Question at a Time</label>
+              </div>
+
+              {/* Webcam Required */}
+              <div className="form-check mb-2">
+                <input
+                  id="wd-webcamRequired"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={quizFields.webcamRequired || false}
+                  onChange={(e) => handleInputChange("webcamRequired", e.target.checked)}
+                />
+                <label htmlFor="wd-webcamRequired" className="form-check-label">Webcam Required</label>
+              </div>
+
+              {/* Lock Questions After Answering */}
+              <div className="form-check mb-2">
+                <input
+                  id="wd-lockQuestionsAfterAnswering"
+                  type="checkbox"
+                  className="form-check-input"
+                  checked={quizFields.lockQuestionsAfterAnswering || false}
+                  onChange={(e) => handleInputChange("lockQuestionsAfterAnswering", e.target.checked)}
+                />
+                <label htmlFor="wd-lockQuestionsAfterAnswering" className="form-check-label">Lock Questions After Answering</label>
+              </div>
+
 
             </div>
 
@@ -346,7 +388,8 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
                 <input
                   id="wd-dueDate"
                   type="date"
-                  value={quizFields.dueDate}
+                  value={formatDateForInput(quizFields.dueDate)}
+
                   onChange={(e) => handleInputChange("dueDate", e.target.value)}
                   className="form-control"
                 />
@@ -356,7 +399,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
                 <input
                   id="wd-availableStartDate"
                   type="date"
-                  value={quizFields.availableStartDate}
+                  value={formatDateForInput(quizFields.availableStartDate)}
                   onChange={(e) => handleInputChange("availableStartDate", e.target.value)}
                   className="form-control"
                 />
@@ -366,7 +409,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
                 <input
                   id="wd-availableUntilDate"
                   type="date"
-                  value={quizFields.availableUntilDate}
+                  value={formatDateForInput(quizFields.availableUntilDate)}
                   onChange={(e) => handleInputChange("availableUntilDate", e.target.value)}
                   className="form-control"
                 />

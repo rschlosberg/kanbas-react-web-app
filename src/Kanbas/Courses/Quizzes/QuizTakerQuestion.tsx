@@ -16,7 +16,10 @@ export default function QuizTakerQuestion({
                 <strong>Question {currentQuestionIndex + 1} of {totalQuestions}</strong>
             </div> */}
             <div className="card-body">
-                <p className="card-text">{question?.questionText}</p>
+                <p
+                    className="card-text"
+                    dangerouslySetInnerHTML={{ __html: question?.questionText }}
+                ></p>
 
                 {question.type === "MULTIPLE CHOICE" && (
                     <div>

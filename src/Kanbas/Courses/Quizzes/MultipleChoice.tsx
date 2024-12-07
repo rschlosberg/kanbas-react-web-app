@@ -1,8 +1,9 @@
-
-
+import React from "react";
 
 
 export default function MultipleChoice({ index, question, updateQuestion }: { index: number, question: any, updateQuestion: (question: any) => void }) {
+
+
 
     return (
 
@@ -65,6 +66,8 @@ export default function MultipleChoice({ index, question, updateQuestion }: { in
                                 <label className="form-check-label">Correct</label> {/* Optional label */}
                             </div>
                         </div>
+
+
                     </div>
 
                 );

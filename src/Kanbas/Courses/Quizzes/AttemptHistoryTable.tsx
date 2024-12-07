@@ -53,7 +53,7 @@ export default function AttemptHistoryTable({ quizAttempts, quiz }: { quizAttemp
                     </tbody>
                 </table>
                 {selectedAttempt &&
-                    <AttemptDetail selectedAttempt={selectedAttempt} setSelectedAttempt={setSelectedAttempt} quiz={quiz} />
+                    <AttemptDetail selectedAttempt={selectedAttempt} setSelectedAttempt={setSelectedAttempt} quiz={quiz} numberOfAttempts={quizAttempts.length || 0} />
                 }
             </div>
         </div>

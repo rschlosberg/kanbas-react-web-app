@@ -18,6 +18,8 @@ export default function QuizTaker({
     submitQuizAttempt: ((quiz: any) => void);
 }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { cid, qid } = useParams();
+    const navigate = useNavigate();
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentQuizAttempt, setCurrentQuizAttempt] = useState(
@@ -37,59 +39,52 @@ export default function QuizTaker({
         setCurrentQuizAttempt({ ...currentQuizAttempt })
     }
 
-    // const quizAttemptSchema = new mongoose.Schema(
-    //     {
-    //         quiz: { type: mongoose.Schema.Types.ObjectId, ref: "QuizModel" },
-    //         user: { type: mongoose.Schema.Types.ObjectId, ref: "UserModel" },
-    //         answers: [
-    //             {
-    //                 questionId: {
-    //                     type: mongoose.Schema.Types.ObjectId,
-    //                     ref: "Quiz.questions",
-    //                 },
-    //                 answer: String,
-    //             }
-    //         ],
-    //         pointsEarned: Number,
-    //         attempt: {
-    //             type: Date,
-    //             default: Date.now,
-    //         }
-    //     },
-    //     { collection: "quizAttempts" }
-    // );
+    const handleSubmit = () => {
+        submitQuizAttempt(currentQuizAttempt); // Submit the quiz attempt
 
+        navigate(`/Kanbas/Courses/${cid}/quizzes`);
+
+    };
 
 
     return (
         <div>
-            <QuizTakerQuestion question={quiz?.questions[currentQuestionIndex]} setAnswer={setAnswer} answer={currentQuizAttempt.answers[currentQuestionIndex].answer} />
+            <QuizTakerQuestion question={quiz?.questions[currentQuestionIndex]} setAnswer={setAnswer} answer={currentQuizAttempt.answers[currentQuestionIndex]?.answer} />
             <hr />
             <div>Question {currentQuestionIndex + 1} out of {quiz?.questions?.length}</div>
             <hr />
 
-            {currentQuestionIndex !== 0 &&
-                <button
-                    onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
-                >
-                    Previous Question
-                </button>
-            }
+            <div className="d-flex justify-content-between align-items-center my-3">
+                {/* Previous Button */}
+                {currentQuestionIndex !== 0 && (
+                    <button
+                        className="btn btn-outline-primary"
+                        onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
+                    >
+                        Previous Question
+                    </button>
+                )}
 
-            {(currentQuestionIndex < quiz?.questions?.length - 1) &&
+                {/* Next Button */}
+                {(currentQuestionIndex < quiz?.questions?.length - 1) && (
+                    <button
+                        className="btn btn-outline-primary ms-auto"
+                        onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
+                    >
+                        Next Question
+                    </button>
+                )}
+            </div>
+
+            <div className="text-center mt-4">
+                {/* Submit Button */}
                 <button
-                    onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-                >
-                    Next Question
-                </button>
-            }
-            <div>
-                <button
-                    onClick={() => submitQuizAttempt(currentQuizAttempt)}
+                    className="btn btn-success btn-lg"
+                    onClick={() => handleSubmit()}
+
                 >
                     SUBMIT QUIZ
                 </button>
-
             </div>
 
         </div >

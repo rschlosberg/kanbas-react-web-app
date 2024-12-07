@@ -1,9 +1,12 @@
 import { FaCheckCircle, FaTimesCircle, FaQuestionCircle } from "react-icons/fa";
 import { format } from "date-fns";
+import { useSelector } from "react-redux";
 
 
 
-export default function AttemptDetail({ selectedAttempt, quiz, setSelectedAttempt }: { selectedAttempt: any, quiz: any, setSelectedAttempt: (attempt: any) => void; }) {
+
+export default function AttemptDetail({ selectedAttempt, quiz, numberOfAttempts, setSelectedAttempt }: { selectedAttempt: any, quiz: any, numberOfAttempts: number, setSelectedAttempt: (attempt: any) => void; }) {
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
 
 
     const findMatchedAttemptAnswerObject = (question: any) => {
@@ -49,10 +52,18 @@ export default function AttemptDetail({ selectedAttempt, quiz, setSelectedAttemp
                     <div className="card mb-4 shadow-sm" key={index}>
                         {/* Question Title */}
                         <h5 className="card-header bg-light">
-                            {renderOutcomeIcon(question)}
-                            <span className="ms-2">{`Question ${index + 1}: ${question.questionText}`}</span>
+                            <span className="me-2" style={{ float: "left" }}>{renderOutcomeIcon(question)}</span>
+                            {/* <span style={{ float: "left" }} className="ms-2 inline-content"> */}
+                            <span className="me-2" style={{ float: "left" }}>{`Question ${index + 1}:  `}</span>
+                            <span style={{ float: "left" }}
+                                dangerouslySetInnerHTML={{
+                                    __html: question.questionText
+                                }}
+                            />
+                            {/* </span> */}
                             <span className="float-end">{findMatchedAttemptAnswerObject(question).isCorrectAnswer ? question.pointsWorth : 0}/{question.pointsWorth} pts</span>
                         </h5>
+
 
                         {/* Display Choices */}
                         <div className="card-body">
@@ -137,6 +148,11 @@ export default function AttemptDetail({ selectedAttempt, quiz, setSelectedAttemp
                                     />
                                 </div>
                             )}
+                            <br></br>
+
+                            {((quiz.showCorrectAnswers && numberOfAttempts === quiz?.howManyAttempts && !findMatchedAttemptAnswerObject(question).isCorrectAnswer) || (currentUser.role === "FACULTY")) &&
+                                <div className="card-footer text-muted">{question.correctAnswers.length > 1 ? "Possible Correct Answers: " : "Correct Answer: "}{question.correctAnswers.join(", ")}</div>
+                            }
                         </div>
                     </div>
                 ))

@@ -7,6 +7,11 @@ import { FaTrash } from "react-icons/fa";
 import { format } from "date-fns";
 import QuizTaker from "./QuizTaker";
 import AttemptHistoryTable from "./AttemptHistoryTable";
+import { useSelector } from "react-redux";
+import { FaPencil } from "react-icons/fa6";
+import { StudentQuizDetails } from "./StudentQuizDetails";
+import FacultyQuizDetails from "./FacultyQuizDetails";
+
 
 
 export default function StudentQuizPage({
@@ -19,10 +24,13 @@ export default function StudentQuizPage({
     const { cid, qid } = useParams();
     const navigate = useNavigate();
     const [quizAttempts, setQuizAttempts] = useState<any[]>([]);
-
     const [quizInProgress, setQuizInProgress] = useState(false);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+
 
     let quiz = quizzes.find((quiz: any) => quiz._id === qid)
+
+    const attemptsRemaining = quiz?.howManyAttempts - quizAttempts.length;
 
     const fetchQuizAttempts = async () => {
         const quizAttempts = await quizzesClient.getQuizAttempts(qid as string);
@@ -57,41 +65,38 @@ export default function StudentQuizPage({
 
 
                     <div>
-                        <strong>Due:</strong> {quiz?.dueDate ? formatDate(quiz.dueDate) : "No due date"}
-                    </div>
-                    <div>
-                        <strong>Points Possible:</strong> {quiz?.points}
-                    </div>
-                    <div>
-                        <strong>Questions</strong> {quiz?.questions?.length}
-                    </div>
-                    <div>
-                        <strong>Available </strong>
-                        {quiz?.availableStartDate
-                            ? formatDate(quiz.availableStartDate)
-                            : "No start date"}
-                        {quiz?.availableUntilDate
-                            ? ` - ${formatDate(quiz.availableUntilDate)}`
-                            : quiz?.availableStartDate
-                                ? " - No end date"
-                                : ""}
+                        {currentUser.role === "FACULTY" ? (
+                            <FacultyQuizDetails quiz={quiz} formatDate={formatDate} />
+                        ) : (
+                            <StudentQuizDetails quiz={quiz} attemptsRemaining={attemptsRemaining} formatDate={formatDate} />
+                        )}
                     </div>
 
-                    <div>
-                        <strong>Time Limit</strong> {quiz?.timeLimit ? `${quiz.timeLimit} minutes` : "No time limit"}
-                    </div>
-                    <div>
-                        <strong>Allowed Attempts</strong> {quiz?.multipleAttempts ? quiz.howManyAttempts : "Single attempt"}
-                    </div>
 
                     <hr></hr>
                     <h3>Instructions</h3>
-                    <div>{quiz?.description || "Proceed with the quiz. Once you start you will not be able to stop the time clock."}</div>
-
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html:
+                                quiz?.description ||
+                                "Proceed with the quiz. Once you start you will not be able to stop the time clock."
+                            ,
+                        }}
+                    ></div>
                     <div className="d-flex justify-content-center mt-3">
-                        <button className="btn btn-primary" onClick={() => setQuizInProgress(true)}>
-                            Take the Quiz
-                        </button>
+                        {currentUser.role === "STUDENT" && quizAttempts.length === quiz?.howManyAttempts ?
+                            (<div className="alert alert-warning text-center font-weight-bold mt-3">
+                                You have no remaining quiz attempts
+                            </div>) :
+                            <button className="btn btn-primary me-2" onClick={() => setQuizInProgress(true)}>
+                                {currentUser.role === "STUDENT" ? "Take the Quiz" : "Preview the Quiz"}
+                            </button>
+                        }
+                        {currentUser.role === "FACULTY" && (
+                            <button className="btn btn-primary" onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`)}>
+                                <FaPencil /> Edit
+                            </button>
+                        )}
                     </div>
                 </>
             }
@@ -99,8 +104,13 @@ export default function StudentQuizPage({
             {quizInProgress &&
                 <>
                     <h3>Instructions</h3>
-                    <div>{quiz?.description || "Proceed with the quiz. Once you start you will not be able to stop the time clock."}</div>
-                    <hr></hr>
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html:
+                                quiz?.description ||
+                                "Proceed with the quiz. Once you start, you will not be able to stop the time clock."
+                        }}
+                    ></div>                    <hr></hr>
                     <div>
                         <QuizTaker quiz={quiz} submitQuizAttempt={submitQuizAttempt} />
                     </div>
