@@ -6,7 +6,8 @@ import { FaBan, FaSearch, FaTrash } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPencil, FaPlus } from "react-icons/fa6";
 import { useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 
 
 import * as coursesClient from "../client";
@@ -104,7 +105,9 @@ export default function Quizzes({ quizzes, setQuizzes }: { quizzes: any, setQuiz
                                 <div className="d-flex align-items-center">
                                     <BsGripVertical className="me-3 fs-3" />
                                     <div>
-                                        {quiz.title}
+                                        <Link to={`/Kanbas/Courses/${cid}/Quizzes/StudentQuizPage/${quiz._id}`} className="text-decoration-none">
+                                            {quiz.title}
+                                        </Link>
                                         <div>
                                             <span className="me-1">
                                                 {new Date(quiz.availableUntilDate) < new Date() ? (

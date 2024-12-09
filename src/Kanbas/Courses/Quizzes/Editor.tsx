@@ -75,7 +75,7 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
     }));
   };
 
-  const handleSave = async (fields = quizFields) => {
+  const handleSave = async (fields = quizFields, navString: string) => {
     try {
       if (cid) {
         fields.questions.forEach((question) => {
@@ -85,11 +85,11 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
         if (qid === "Editor") {
           const newQuiz = await coursesClient.createQuizForCourse(cid, fields);
           setQuizzes([...quizzes, newQuiz]);
-          navigate(`/Kanbas/Courses/${cid}/quizzes`);
+          navigate(navString);
         } else {
           const updatedQuiz = await quizzesClient.updateQuiz(fields);
           setQuizzes([...quizzes, updatedQuiz]);
-          navigate(`/Kanbas/Courses/${cid}/quizzes`);
+          navigate(navString);
         }
       }
     } catch (error) {
@@ -441,12 +441,18 @@ export default function QuizEditor({ quizzes, setQuizzes }: { quizzes: any, setQ
           onClick={() => {
             const updatedFields = { ...quizFields, published: true };
             setQuizFields(updatedFields);
-            handleSave(updatedFields);
+            handleSave(updatedFields, `/Kanbas/Courses/${cid}/quizzes`);
           }}
         >
           Save & Publish
         </button>
-        <button className="btn btn-primary" onClick={() => handleSave(quizFields)}>Save</button>
+
+        <button
+          className="btn btn-primary"
+          onClick={() => handleSave(quizFields, `/Kanbas/Courses/${cid}/quizzes/StudentQuizPage/${qid}`)}
+        >
+          Save
+        </button>
       </div>
     </div >
   );
