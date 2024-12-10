@@ -89,9 +89,6 @@ export default function Question({
                 <FillBlank updateQuestion={updateQuestion} question={question} index={index} />
             )}
 
-
-
-
         </>
     )
 }
